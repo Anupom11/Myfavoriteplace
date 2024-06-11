@@ -56,9 +56,10 @@ export default AddData=()=> {
                         multiline
                         maxLength={50}
                         numberOfLines={2}
+                        placeholder="Picture title"
                     />
 
-                    <TouchableOpacity style={styles.button1}>
+                    <TouchableOpacity style={styles.button1} onPress={()=> navigation.navigate("CameraView")}>
                         <Text style={{color:'white', fontSize:15 }}>Click picture</Text>
                     </TouchableOpacity>
 
