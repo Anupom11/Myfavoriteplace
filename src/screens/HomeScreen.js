@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, StatusBar, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import { View, Text, StatusBar, TouchableOpacity, Platform } from "react-native";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -9,6 +9,10 @@ import { useNavigation } from "@react-navigation/native";
 export default HomeScreen=()=> {
 
     const navigation = useNavigation();
+
+    useEffect(()=> {
+
+    }, []);
 
     const HeaderSection=()=> {
         return (
@@ -34,7 +38,7 @@ export default HomeScreen=()=> {
             
             <StatusBarSection/>
 
-        <HeaderSection/>
+            <HeaderSection/>
 
         </View>
     )

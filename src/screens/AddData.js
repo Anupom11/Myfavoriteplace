@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StatusBar, TouchableOpacity, TextInput, Button, Image, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StatusBar, TouchableOpacity, TextInput, Button, Image, StyleSheet, ScrollView, Platform } from "react-native";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -14,6 +14,10 @@ export default AddData=()=> {
     const navigation = useNavigation();
 
     const [photoTitle, setPhotoTitle] = useState('');
+
+    useEffect(()=> {
+               
+    });
 
     const HeaderSection=()=> {
         return (
@@ -65,6 +69,24 @@ export default AddData=()=> {
 
                     <View style={{margin:20, alignSelf:'center', shadowColor:'black', shadowOpacity:10 }}>
                         <Image source={testImage} style={{resizeMode:'center', height:200, }}/>
+                    </View>
+
+                    <View>
+                        <Image 
+                            source={{
+                                uri: 'file:///storage/emulated/0/Download/FavoritePlace/Images/130624_1700251.jpg', 
+                                height:200, 
+                                width:200
+                            }}
+                            resizeMode={'contain'}
+                            resizeMethod={'resize'}
+                            onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
+                        />
+
+                        {/* <Image  
+                            source={{uri:'file:///storage/emulated/0/Download/MEGRAMS/Images/1251678_120624_1607928.jpg'}}
+                            style={{resizeMode:'center', height:200, width:100 }}
+                        /> */}
                     </View>
 
                 </View>

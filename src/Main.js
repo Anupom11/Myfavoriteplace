@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import AddData from "./screens/AddData";
 import { CameraScreen } from "./screens/CameraScreen";
+import Myscreen from "./screens/Myscreen";
 
 export default function Main() {
 
@@ -17,6 +18,7 @@ export default function Main() {
                 <stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}} /> 
                 <stack.Screen name="AddData" component={AddData} options={{headerShown:false}}    />
                 <stack.Screen name="CameraView" component={CameraScreen} options={{headerShown:false}}  />
+                <stack.Screen name="Myscreen" component={Myscreen} options={{headerShown:false}}    />
             </stack.Navigator>
         </NavigationContainer>
     )

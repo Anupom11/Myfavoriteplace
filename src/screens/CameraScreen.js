@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Modal, Pressable, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, Modal, Pressable, Image, Platform } from "react-native";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
+import moment from "moment";
+
 import { RNCamera, FaceDetector } from 'react-native-camera';
 
-const RNFS = require('react-native-fs');
-
-const testImage = require('../imagesource/1.png');
-
-const imageURI = 'http://books.google.com/books/content?id=PCDengEACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api';
+const RNFS = require('react-native-fs'); 
 
 export const CameraScreen=()=> { 
 
@@ -18,21 +16,66 @@ export const CameraScreen=()=> {
 
     const [imageUri, setImageUri] = useState('');
 
+    //-----------------------------------------------------------------
+    const saveImageFile = async(fileUri) => {
+      const dirHome = Platform.select({
+        ios: `${RNFS.DocumentDirectoryPath}/FavoritePlace`,
+        android: `${RNFS.DownloadDirectoryPath }/FavoritePlace`
+      }); 
+
+      const dirPicutures = `${dirHome}/Images`;
+
+      const newImageName  = `${moment().format('DDMMYY_HHmmSSS')}.jpg`;
+      const newFilepath   = `${dirPicutures}/${newImageName}`;
+
+      setImageUri("file://"+newFilepath);
+
+      moveAttachment(fileUri, newFilepath, dirPicutures, resp=> {
+        if(resp) {
+          if(imageUri != '') {
+            //console.log("ImageURL:"+imageUri);
+            setModalVisible(true);
+          }
+        }
+      });
+
+    }
+
+    //move the image attachment to app folder
+    const moveAttachment = async (filePath, newFilepath, dirPicutures, callback) => {
+      return new Promise((resolve, reject) => {
+        RNFS.mkdir(dirPicutures)
+          .then(() => {
+            RNFS.moveFile(filePath, newFilepath)
+              .then(() => {
+                console.log('FILE MOVED', filePath, newFilepath);
+                callback(true);
+                resolve(true);
+              })
+              .catch(error => {
+                console.log('moveFile error', error);
+                reject(error);
+              });
+          }) 
+          .catch(err => {
+            console.log('mkdir error', err);
+            reject(err);
+          });
+      });
+    };
+
+    //------------------------------------------------------------------
+
+
     const takePicture = async() => {
         if (this.camera) {
           const options = { quality: 0.5, base64: true };
 
           const data = await this.camera.takePictureAsync(options);
-          
-          console.log(data.uri);
-          
-          setImageUri(data.uri);
-
-          if(data.uri != null) {
-            setModalVisible(true);
-          }
+                  
+          saveImageFile(data.uri);
         }
-    };
+    }
 
     const ModalSection=()=> {
         return (
@@ -40,20 +83,40 @@ export const CameraScreen=()=> {
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => { 
-                    setModalVisible(!modalVisible);
-                }}>
+                onRequestClose={() => { setModalVisible(!modalVisible); }}>
+
                 <View style={styles.centeredView}> 
+
                     <View style={styles.modalView}>
-                        <Text style={styles.modalText}>Hello World!</Text>
-                        <Image source={{uri: imageURI}} style={{resizeMode:'center', height:200, }}/>
-                        <Pressable
+                         
+                        <Image 
+                            source={{
+                                uri: imageUri, 
+                                height:600, 
+                                width:350
+                            }}
+                            resizeMode={'contain'}
+                            resizeMethod={'resize'}
+                            onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
+                        />
+
+                        <View style={{width:'100%', flexDirection:"row", justifyContent:"space-around", }}>
+                            <Pressable
+                              onPress={()=> setModalVisible(!modalVisible)}>
+                              <Icon name="close" size={30} color="white"/>
+                              </Pressable>
+                            <Icon name="check" size={30} color="white"/>
+                        </View>
+
+                        {/* <Pressable
                             style={[styles.button, styles.buttonClose]}
                             onPress={() => setModalVisible(!modalVisible)}>
                             <Text style={styles.textStyle}>Hide Modal</Text>
-                        </Pressable>
+                        </Pressable> */}
+
                     </View>
                 </View>
+
             </Modal>
         )
     }
@@ -128,7 +191,7 @@ const styles = StyleSheet.create({
         height:800,
         width:400,
         margin: 10,
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         borderRadius: 5,
         padding: 35,
         alignItems: 'center',
@@ -161,4 +224,6 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         textAlign: 'center',
       },
-  });
+});
+
+
