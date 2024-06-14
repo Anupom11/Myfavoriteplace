@@ -72,8 +72,7 @@ export default AddData=(props)=> {
                         <Text style={{color:'white', fontSize:15 }}>Click picture</Text>
                     </TouchableOpacity>
 
-                    <View style={{margin:20, alignSelf:'center', shadowColor:'black', shadowOpacity:10 }}>
-                        {/* <Image source={testImage} style={{resizeMode:'center', height:200, }}/> */}
+                    <View style={{margin:20, alignSelf:'center', shadowColor:'black', shadowOpacity:10 }}> 
                         {
                             capturedImageUri != '' ?
                                 <Image
@@ -83,7 +82,9 @@ export default AddData=(props)=> {
                                     onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
                                     style={{borderRadius:10}}   />
                             :
-                                null
+                                <View style={{justifyContent:'center', alignItems:'center', alignContent:'center', height:300, width: 350, borderRadius:5, shadowOffset:5, backgroundColor:'#accbfc'}}>
+                                    <Text style={{color:'black'}}>No image is taken yet!</Text>
+                                </View>
 
                         }   
                     </View>
