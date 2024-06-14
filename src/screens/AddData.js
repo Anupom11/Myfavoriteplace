@@ -9,14 +9,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const testImage = require('../imagesource/1.png');
 
-export default AddData=()=> {
+export default AddData=(props)=> {
 
     const navigation = useNavigation();
 
     const [photoTitle, setPhotoTitle] = useState('');
 
+    const [capturedImageUri, setCapturedImageUri] = useState('');
+
     useEffect(()=> {
-               
+        if(props.route.params != undefined && props.route.params.capturedImageURI != undefined) {
+            setCapturedImageUri(props.route.params.capturedImageURI);
+        }        
+
     });
 
     const HeaderSection=()=> {
@@ -68,7 +73,19 @@ export default AddData=()=> {
                     </TouchableOpacity>
 
                     <View style={{margin:20, alignSelf:'center', shadowColor:'black', shadowOpacity:10 }}>
-                        <Image source={testImage} style={{resizeMode:'center', height:200, }}/>
+                        {/* <Image source={testImage} style={{resizeMode:'center', height:200, }}/> */}
+                        {
+                            capturedImageUri != '' ?
+                                <Image
+                                    source={{uri:capturedImageUri, height:500, width:450}}
+                                    resizeMode={'contain'}
+                                    resizeMethod={'auto'}
+                                    onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
+                                    style={{borderRadius:10}}   />
+                            :
+                                null
+
+                        }   
                     </View>
 
                 </View>

@@ -87,7 +87,7 @@ export const CameraScreen=()=> {
                   onPress={()=> handleImgSelectionOp()}>
                   <Icon name="check" size={30} color="white"/>
                 </Pressable>
-                
+
               </View>
 
               {/* <Pressable
@@ -112,7 +112,7 @@ export const CameraScreen=()=> {
     // method to handle the image selection button in the modal
     const handleImgSelectionOp=()=> {
       setModalVisible(false);
-      navigation.navigate("AddData")
+      navigation.navigate("AddData", {capturedImageURI: imageUri})
     }
 
     return (
