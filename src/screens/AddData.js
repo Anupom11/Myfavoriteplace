@@ -71,24 +71,6 @@ export default AddData=()=> {
                         <Image source={testImage} style={{resizeMode:'center', height:200, }}/>
                     </View>
 
-                    <View>
-                        <Image 
-                            source={{
-                                uri: 'file:///storage/emulated/0/Download/FavoritePlace/Images/130624_1700251.jpg', 
-                                height:200, 
-                                width:200
-                            }}
-                            resizeMode={'contain'}
-                            resizeMethod={'resize'}
-                            onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
-                        />
-
-                        {/* <Image  
-                            source={{uri:'file:///storage/emulated/0/Download/MEGRAMS/Images/1251678_120624_1607928.jpg'}}
-                            style={{resizeMode:'center', height:200, width:100 }}
-                        /> */}
-                    </View>
-
                 </View>
             </ScrollView>
 

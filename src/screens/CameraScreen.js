@@ -8,9 +8,14 @@ import moment from "moment";
 
 import { RNCamera, FaceDetector } from 'react-native-camera';
 
+import { MoveAttachment, DeleteImgFile } from "../components/imageFileOp";
+import { useNavigation } from "@react-navigation/native";
+
 const RNFS = require('react-native-fs'); 
 
 export const CameraScreen=()=> { 
+
+    const navigation = useNavigation();
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -28,42 +33,15 @@ export const CameraScreen=()=> {
       const newImageName  = `${moment().format('DDMMYY_HHmmSSS')}.jpg`;
       const newFilepath   = `${dirPicutures}/${newImageName}`;
 
-      setImageUri("file://"+newFilepath);
+      setImageUri("file://"+newFilepath);   //<--- set the image uri for modal view
 
-      moveAttachment(fileUri, newFilepath, dirPicutures, resp=> {
-        if(resp) {
-          if(imageUri != '') {
-            //console.log("ImageURL:"+imageUri);
-            setModalVisible(true);
-          }
+      MoveAttachment(fileUri, newFilepath, dirPicutures, resp=> { 
+        if(resp) { 
+          setModalVisible(true);
         }
       });
 
     }
-
-    //move the image attachment to app folder
-    const moveAttachment = async (filePath, newFilepath, dirPicutures, callback) => {
-      return new Promise((resolve, reject) => {
-        RNFS.mkdir(dirPicutures)
-          .then(() => {
-            RNFS.moveFile(filePath, newFilepath)
-              .then(() => {
-                console.log('FILE MOVED', filePath, newFilepath);
-                callback(true);
-                resolve(true);
-              })
-              .catch(error => {
-                console.log('moveFile error', error);
-                reject(error);
-              });
-          }) 
-          .catch(err => {
-            console.log('mkdir error', err);
-            reject(err);
-          });
-      });
-    };
-
     //------------------------------------------------------------------
 
 
@@ -78,47 +56,63 @@ export const CameraScreen=()=> {
     }
 
     const ModalSection=()=> {
-        return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => { setModalVisible(!modalVisible); }}>
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => { handleModalCloseOp(); }}>
 
-                <View style={styles.centeredView}> 
-
-                    <View style={styles.modalView}>
+          <View style={styles.centeredView}> 
+            <View style={styles.modalView}>
                          
-                        <Image 
-                            source={{
-                                uri: imageUri, 
-                                height:600, 
-                                width:350
-                            }}
-                            resizeMode={'contain'}
-                            resizeMethod={'resize'}
-                            onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
-                        />
+              <Image 
+                source={{
+                  uri: imageUri, 
+                  height:600, 
+                  width:350
+                }}
+                resizeMode={'contain'}
+                resizeMethod={'resize'}
+                onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
+              />
 
-                        <View style={{width:'100%', flexDirection:"row", justifyContent:"space-around", }}>
-                            <Pressable
-                              onPress={()=> setModalVisible(!modalVisible)}>
-                              <Icon name="close" size={30} color="white"/>
-                              </Pressable>
-                            <Icon name="check" size={30} color="white"/>
-                        </View>
+              <View style={{width:'100%', flexDirection:"row", justifyContent:"space-around", }}>
+                <Pressable
+                  onPress={()=> handleModalCloseOp()}>
+                  <Icon name="close" size={30} color="white"/>
+                </Pressable>
 
-                        {/* <Pressable
-                            style={[styles.button, styles.buttonClose]}
-                            onPress={() => setModalVisible(!modalVisible)}>
-                            <Text style={styles.textStyle}>Hide Modal</Text>
-                        </Pressable> */}
+                <Pressable
+                  onPress={()=> handleImgSelectionOp()}>
+                  <Icon name="check" size={30} color="white"/>
+                </Pressable>
+                
+              </View>
 
-                    </View>
-                </View>
+              {/* <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable> */}
 
-            </Modal>
-        )
+            </View>
+          </View>
+
+        </Modal>
+      )
+    }
+
+    // method to handle the modal close operation
+    const handleModalCloseOp=()=> {
+      DeleteImgFile(imageUri);
+      setModalVisible(false);
+    }
+
+    // method to handle the image selection button in the modal
+    const handleImgSelectionOp=()=> {
+      setModalVisible(false);
+      navigation.navigate("AddData")
     }
 
     return (
@@ -189,7 +183,7 @@ const styles = StyleSheet.create({
       },
       modalView: {
         height:800,
-        width:400,
+        width:'100%',
         margin: 10,
         backgroundColor: 'black',
         borderRadius: 5,
