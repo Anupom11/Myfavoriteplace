@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StatusBar, TouchableOpacity, TextInput, Button, Image, StyleSheet, ScrollView, Platform } from "react-native";
+import { View, Text, StatusBar, TouchableOpacity, TextInput, Button, Image, StyleSheet, ScrollView, Platform, ActivityIndicator } from "react-native";
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -7,7 +7,7 @@ import { StatusBarSection } from "../screenComponents/statusBarComponent";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const testImage = require('../imagesource/1.png');
+import { GetLocationPicker } from "../components/LocationPicker"; 
 
 export default AddData=(props)=> {
 
@@ -17,11 +17,12 @@ export default AddData=(props)=> {
 
     const [capturedImageUri, setCapturedImageUri] = useState('');
 
+    const [userLocation, setUserLocation] = useState();
+
     useEffect(()=> {
         if(props.route.params != undefined && props.route.params.capturedImageURI != undefined) {
             setCapturedImageUri(props.route.params.capturedImageURI);
-        }        
-
+        }   
     });
 
     const HeaderSection=()=> {
@@ -51,11 +52,12 @@ export default AddData=(props)=> {
     return (
         <SafeAreaView>
             <StatusBarSection />
-
+            
             <HeaderSection/>
 
             <ScrollView>
                 <View style={styles.baseView}>
+
                     <Text style={styles.fontStyle1}>Enter picture title: </Text>
                     <TextInput 
                         style={styles.input}
@@ -96,7 +98,7 @@ export default AddData=(props)=> {
                     </View>
 
                     <View style={{flex:1, width:'100%', height:100, marginBottom:50, flexDirection:'row', justifyContent:"space-around", color:'#000000'}}>
-                        <TouchableOpacity style={[styles.button1, {width:150}]} onPress={()=> navigation.navigate("CameraView")}>
+                        <TouchableOpacity style={[styles.button1, {width:150}]} onPress={()=> GetLocationPicker(resp=> {setUserLocation(resp)})}>
                             <Text style={{color:'white', fontSize:15 }}>Locate user</Text>
                         </TouchableOpacity>
 
@@ -104,7 +106,6 @@ export default AddData=(props)=> {
                             <Text style={{color:'white', fontSize:15 }}>Pick on map</Text>
                         </TouchableOpacity> 
                     </View>
-
                 </View>
             </ScrollView>
 
@@ -114,7 +115,7 @@ export default AddData=(props)=> {
 }
 
 const styles = StyleSheet.create({
-    baseView: {
+    baseView: { 
         margin:10,
         marginTop:20,
     },
