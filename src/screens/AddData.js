@@ -68,10 +68,6 @@ export default AddData=(props)=> {
                         placeholder="Picture title"
                     />
 
-                    <TouchableOpacity style={styles.button1} onPress={()=> navigation.navigate("CameraView")}>
-                        <Text style={{color:'white', fontSize:15 }}>Click picture</Text>
-                    </TouchableOpacity>
-
                     <View style={{margin:20, alignSelf:'center', shadowColor:'black', shadowOpacity:10 }}> 
                         {
                             capturedImageUri != '' ?
@@ -82,11 +78,31 @@ export default AddData=(props)=> {
                                     onError={(e)=> console.log("Error:"+e.nativeEvent.error)}
                                     style={{borderRadius:10}}   />
                             :
-                                <View style={{justifyContent:'center', alignItems:'center', alignContent:'center', height:300, width: 350, borderRadius:5, shadowOffset:5, backgroundColor:'#accbfc'}}>
+                                <View style={{justifyContent:'center', alignItems:'center', alignContent:'center', height:200, width: 350, borderRadius:5, shadowOffset:5, backgroundColor:'#accbfc'}}>
                                     <Text style={{color:'black'}}>No image is taken yet!</Text>
                                 </View>
 
                         }   
+                    </View>
+
+                    <TouchableOpacity style={styles.button1} onPress={()=> navigation.navigate("CameraView")}>
+                        <Text style={{color:'white', fontSize:15 }}>Take picture</Text>
+                    </TouchableOpacity>
+                        
+                    <View style={{margin:20, alignSelf:'center', marginBottom:0}}>
+                        <View style={{justifyContent:'center', alignItems:'center', alignContent:'center', height:200, width: 350, borderRadius:5, shadowOffset:5, backgroundColor:'#accbfc'}}>
+                            <Text style={{color:'black'}}>No location selected yet!</Text>
+                        </View>
+                    </View>
+
+                    <View style={{flex:1, width:'100%', height:100, marginBottom:50, flexDirection:'row', justifyContent:"space-around", color:'#000000'}}>
+                        <TouchableOpacity style={[styles.button1, {width:150}]} onPress={()=> navigation.navigate("CameraView")}>
+                            <Text style={{color:'white', fontSize:15 }}>Locate user</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[styles.button1, {width:150}]} onPress={()=> navigation.navigate("CameraView")}>
+                            <Text style={{color:'white', fontSize:15 }}>Pick on map</Text>
+                        </TouchableOpacity> 
                     </View>
 
                 </View>
@@ -112,11 +128,11 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom:10,
         borderWidth: 1,
-        padding: 10,
+        padding: 5,
       },
     button1: {
         height:50,
-        marginTop:10, 
+        margin:15,
         backgroundColor:'#297b91', 
         alignItems:'center',  
         justifyContent:'center', 
